@@ -10,8 +10,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="filmes.ilhasoft.omdb.MainActivity">
 
-    <TextView
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:hint="Movie"
+        android:ems="12"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/editTextMovie" />
+
+
 </RelativeLayout>
