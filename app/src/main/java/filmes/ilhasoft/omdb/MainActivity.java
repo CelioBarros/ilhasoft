@@ -1,41 +1,82 @@
 package filmes.ilhasoft.omdb;
 
 import android.app.Activity;
-import android.os.AsyncTask;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
+
+    String[] itemname ={
+            "Safari",
+            "Camera",
+            "Global",
+            "FireFox",
+            "UC Browser",
+            "Android Folder",
+            "VLC Player",
+            "Cold War"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        EditText editText = (EditText) findViewById(R.id.editTextMovie);
+/*
 
+        setListAdapter(new ArrayAdapter<String>(
+                this, R.layout.list_movies,
+                R.id.Itemname,itemname));
+*/
+
+        
+        EditText editText = (EditText) findViewById(R.id.editTextMovie);
 
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    Log.d("teste", String.valueOf(v.getText()));
-                    //performSearch();
-                    SearchMovie searchMovie = new SearchMovie(String.valueOf(v.getText()));
-                    searchMovie.execute();
+                    SearchMovie searchMovie = new SearchMovie();
+                    String searchStr = "";
+                    try {
+                        searchStr = searchMovie.execute(String.valueOf(v.getText())).get();
+                        JSONObject search = new JSONObject(searchStr);
+                        JSONArray searchArray = (JSONArray) search.get("Search");
+                        String[] movies = new String[searchArray.length()];
+                        for (int i = 0; i < searchArray.length(); i++) {
+                            movies[i] = (String) ((JSONObject) searchArray.get(i)).get("Title");
+                        }
+                        ListView lv = (ListView)findViewById(R.id.list);
+                        ArrayAdapter<String> adapter =
+                                new ArrayAdapter<String>(getApplicationContext(), R.layout.list_movies, R.id.Itemname, movies);
+                        lv.setAdapter(adapter);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
 
                     InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
@@ -46,49 +87,4 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public class SearchMovie extends AsyncTask<String, String, String> {
-
-        HttpURLConnection urlConnection;
-        private String mUrl;
-
-        public SearchMovie(String movieName){
-            mUrl = "http://www.omdbapi.com/?type=movie&r=json&s=" + movieName;
-        }
-
-        @Override
-        protected String doInBackground(String... args) {
-
-            StringBuilder result = new StringBuilder();
-
-            try {
-                URL url = new URL(mUrl);
-                urlConnection = (HttpURLConnection) url.openConnection();
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    result.append(line);
-                }
-
-            }catch( Exception e) {
-                e.printStackTrace();
-            }
-            finally {
-                urlConnection.disconnect();
-            }
-
-            Log.d("aqwui", result.toString());
-            return result.toString();
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-
-            //Do something with the JSON string
-
-        }
-
-    }
 }
