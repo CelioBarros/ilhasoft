@@ -1,14 +1,9 @@
 package filmes.ilhasoft.omdb;
 
-/**
- * Created by Celio on 06/02/2017.
- */
-
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
-
-import static android.R.attr.bitmap;
 
 public class CustomList extends ArrayAdapter<String>{
 
@@ -47,20 +33,6 @@ public class CustomList extends ArrayAdapter<String>{
 
         ImageView imageView = (ImageView) rowView.findViewById(R.id.movie_poster);
         txtTitle.setText(web[position]);
-
-/*
-        GetPoster poster = new GetPoster();
-        InputStream posterInput = null;
-        try {
-            posterInput = poster.execute(position).get();
-            Bitmap bitmap = BitmapFactory.decodeStream(posterInput);
-            imageView.setImageBitmap(bitmap);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-*/
 
         try {
             GetPoster poster = new GetPoster();

@@ -10,25 +10,23 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="filmes.ilhasoft.omdb.MainActivity">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Register the movie:"/>
-
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:imeOptions="actionSearch"
         android:inputType="text"
-        android:hint="Movie"
+        android:hint="Register the Movie"
         android:ems="12"
         android:layout_alignParentStart="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:id="@+id/editTextMovie" />
-    <ListView
-        android:id="@+id/list_search_movies"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+
+        <ListView
+            android:id="@+id/list_search_movies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editTextMovie"
+            android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

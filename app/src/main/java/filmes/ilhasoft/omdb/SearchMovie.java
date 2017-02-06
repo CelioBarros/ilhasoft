@@ -1,9 +1,14 @@
 package filmes.ilhasoft.omdb;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -12,6 +17,12 @@ import java.net.URL;
 public class SearchMovie extends AsyncTask<String, String, String> {
 
     HttpURLConnection urlConnection;
+
+    Context context;
+
+    public SearchMovie(Context context) {
+        this.context = context;
+    }
 
     @Override
     protected String doInBackground(String... args) {
@@ -30,7 +41,15 @@ public class SearchMovie extends AsyncTask<String, String, String> {
                 result.append(line);
             }
 
-        }catch( Exception e) {
+        }catch( FileNotFoundException e) {
+            Handler handler =  new Handler(context.getMainLooper());
+            handler.post( new Runnable(){
+                public void run(){
+                    Toast.makeText(context, "Don't exist this film!", Toast.LENGTH_LONG).show();
+                }
+            });
+            e.printStackTrace();
+        } catch( Exception e) {
             e.printStackTrace();
         }
         finally {
@@ -40,6 +59,8 @@ public class SearchMovie extends AsyncTask<String, String, String> {
     }
 
     @Override
-    protected void onPostExecute(String result) {}
+    protected void onPostExecute(String result) {
+        super.onPostExecute(result);
+    }
 
 }
