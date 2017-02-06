@@ -10,8 +10,7 @@
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:src="@drawable/not_exist" />
+        android:layout_marginTop="5dp"/>
     <TextView
         android:id="@+id/movie_name"
         android:layout_width="wrap_content"
