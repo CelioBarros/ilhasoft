@@ -38,12 +38,14 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject search = new JSONObject(searchStr);
                         JSONArray searchArray = (JSONArray) search.get("Search");
                         String[] movies = new String[searchArray.length()];
+                        String[] posters = new String[searchArray.length()];
                         for (int i = 0; i < searchArray.length(); i++) {
                             movies[i] = (String) ((JSONObject) searchArray.get(i)).get("Title");
+                            posters[i] = (String) ((JSONObject) searchArray.get(i)).get("Poster");
                         }
-                        ListView lv = (ListView)findViewById(R.id.list);
-                        ArrayAdapter<String> adapter =
-                                new ArrayAdapter<String>(getApplicationContext(), R.layout.list_movies, R.id.Itemname, movies);
+                        ListView lv = (ListView)findViewById(R.id.list_search_movies);
+                        CustomList adapter = new
+                                CustomList(MainActivity.this, movies, posters);
                         lv.setAdapter(adapter);
                     } catch (JSONException e) {
                         e.printStackTrace();

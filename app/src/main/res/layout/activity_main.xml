@@ -27,7 +27,7 @@
         android:layout_marginTop="10dp"
         android:id="@+id/editTextMovie" />
     <ListView
-        android:id="@+id/list"
+        android:id="@+id/list_search_movies"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

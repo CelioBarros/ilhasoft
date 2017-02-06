@@ -1,7 +1,6 @@
 package filmes.ilhasoft.omdb;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
