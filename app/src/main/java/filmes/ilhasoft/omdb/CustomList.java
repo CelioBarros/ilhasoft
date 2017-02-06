@@ -19,11 +19,13 @@ public class CustomList extends ArrayAdapter<String>{
     private final Activity context;
     private final String[] web;
     private final String[] posters;
+    private Bitmap[] posterImg;
     public CustomList(Activity context, String[] web, String[] posters) {
         super(context, R.layout.list_movies, web);
         this.context = context;
         this.web = web;
         this.posters = posters;
+        this.posterImg = new Bitmap[posters.length];
     }
     @Override
     public View getView(int position, View view, ViewGroup parent) {
@@ -36,7 +38,8 @@ public class CustomList extends ArrayAdapter<String>{
 
         try {
             GetPoster poster = new GetPoster();
-            imageView.setImageBitmap(poster.execute(position).get());
+            posterImg[position] = poster.execute(position).get();
+            imageView.setImageBitmap(posterImg[position]);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -45,8 +48,12 @@ public class CustomList extends ArrayAdapter<String>{
         return rowView;
     }
 
+    public Bitmap getPosterImg(int position){
+        return posterImg[position];
+    }
 
-    private class GetPoster extends AsyncTask<Integer, Void, Bitmap> {
+
+    public class GetPoster extends AsyncTask<Integer, Void, Bitmap> {
 
         @Override
         protected Bitmap doInBackground(Integer... args) {

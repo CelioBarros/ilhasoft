@@ -14,13 +14,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class SearchMovie extends AsyncTask<String, String, String> {
+public class MovieInformation extends AsyncTask<String, String, String> {
 
     HttpURLConnection urlConnection;
 
     Context context;
 
-    public SearchMovie(Context context) {
+    public MovieInformation(Context context) {
         this.context = context;
     }
 
@@ -30,7 +30,7 @@ public class SearchMovie extends AsyncTask<String, String, String> {
         StringBuilder result = new StringBuilder();
 
         try {
-            URL url = new URL("http://www.omdbapi.com/?type=movie&r=json&s=" + args[0]);
+            URL url = new URL(args[0]);
             urlConnection = (HttpURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 
@@ -61,4 +61,5 @@ public class SearchMovie extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
     }
+
 }

@@ -2,10 +2,13 @@ package filmes.ilhasoft.omdb;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.test.espresso.core.deps.guava.reflect.TypeToken;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -17,9 +20,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,13 +51,13 @@ public class MainActivity extends AppCompatActivity {
                             searchStr = searchMovie.execute(String.valueOf(v.getText())).get();
                             JSONObject search = new JSONObject(searchStr);
                             JSONArray searchArray = (JSONArray) search.get("Search");
-                            final String[] movies = new String[searchArray.length()];
-                            String[] posters = new String[searchArray.length()];
+                            String[] movies = new String[searchArray.length()];
+                            final String[] posters = new String[searchArray.length()];
                             for (int i = 0; i < searchArray.length(); i++) {
                                 movies[i] = (String) ((JSONObject) searchArray.get(i)).get("Title");
                                 posters[i] = (String) ((JSONObject) searchArray.get(i)).get("Poster");
                             }
-                            CustomList adapter = new
+                            final CustomList adapter = new
                                     CustomList(MainActivity.this, movies, posters);
                             ListView lv = (ListView)findViewById(R.id.list_search_movies);
                             lv.setAdapter(adapter);
@@ -57,8 +65,26 @@ public class MainActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    Toast.makeText(MainActivity.this, "You Clicked at "+movies[position], Toast.LENGTH_LONG).show();
+                                    MovieInformation movieInformation = new MovieInformation(MainActivity.this);
+                                    String result = "";
+                                    try {
+                                        String movie = movieInformation.execute("http://www.omdbapi.com/?i=tt0372784").get();
+                                        Map<String, String> mapMovie = new Gson().fromJson(movie, new TypeToken<HashMap<String, String>>() {}.getType());
+                                        DatabaseController crud = new DatabaseController(getBaseContext());
+                                        result = crud.insert(mapMovie.get("imdbID"), mapMovie.get("Title"),
+                                                Integer.parseInt(mapMovie.get("Year")), mapMovie.get("Runtime"), mapMovie.get("Genre"),
+                                                mapMovie.get("Plot"), mapMovie.get("Awards"), Float.parseFloat(mapMovie.get("imdbRating")),
+                                                mapMovie.get("imdbVotes"), adapter.getPosterImg(position));
 
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    } catch (ExecutionException e) {
+                                        e.printStackTrace();
+                                    } catch (Exception e){
+                                        e.printStackTrace();
+                                    }
+                                    Toast.makeText(MainActivity.this,result, Toast.LENGTH_LONG).show();
+                                    Log.d("teste", result);
                                 }
                             });
                         } catch (JSONException e) {
