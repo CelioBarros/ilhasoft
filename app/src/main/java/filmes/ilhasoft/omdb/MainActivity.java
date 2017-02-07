@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                         SearchMovie searchMovie = new SearchMovie(MainActivity.this);
                         String searchStr = "";
                         try {
-                            searchStr = searchMovie.execute(String.valueOf(v.getText())).get();
+                            searchStr = searchMovie.execute((String.valueOf(v.getText())).replace(" ", "+")).get();
                             JSONObject search = new JSONObject(searchStr);
                             JSONArray searchArray = (JSONArray) search.get("Search");
                             String[] movies = new String[searchArray.length()];
