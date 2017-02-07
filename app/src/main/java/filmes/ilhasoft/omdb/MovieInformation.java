@@ -1,6 +1,5 @@
 package filmes.ilhasoft.omdb;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;

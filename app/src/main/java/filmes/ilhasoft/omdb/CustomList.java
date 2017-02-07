@@ -17,13 +17,13 @@ import java.util.concurrent.ExecutionException;
 public class CustomList extends ArrayAdapter<String>{
 
     private final Activity context;
-    private final String[] web;
+    private final String[] movies;
     private final String[] posters;
     private Bitmap[] posterImg;
-    public CustomList(Activity context, String[] web, String[] posters) {
-        super(context, R.layout.list_movies, web);
+    public CustomList(Activity context, String[] movies, String[] posters) {
+        super(context, R.layout.list_movies, movies);
         this.context = context;
-        this.web = web;
+        this.movies = movies;
         this.posters = posters;
         this.posterImg = new Bitmap[posters.length];
     }
@@ -34,7 +34,7 @@ public class CustomList extends ArrayAdapter<String>{
         TextView txtTitle = (TextView) rowView.findViewById(R.id.movie_name);
 
         ImageView imageView = (ImageView) rowView.findViewById(R.id.movie_poster);
-        txtTitle.setText(web[position]);
+        txtTitle.setText(movies[position]);
 
         try {
             GetPoster poster = new GetPoster();
