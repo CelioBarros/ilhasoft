@@ -25,8 +25,17 @@ public class CustomList extends ArrayAdapter<String>{
         this.context = context;
         this.movies = movies;
         this.posters = posters;
-        this.posterImg = new Bitmap[posters.length];
+        this.posterImg = new Bitmap[movies.length];
     }
+
+    public CustomList(Activity context, String[] movies, Bitmap[] posterImg) {
+        super(context, R.layout.list_movies, movies);
+        this.context = context;
+        this.movies = movies;
+        this.posterImg = posterImg;
+        this.posters = new String[0];
+    }
+
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
@@ -36,14 +45,18 @@ public class CustomList extends ArrayAdapter<String>{
         ImageView imageView = (ImageView) rowView.findViewById(R.id.movie_poster);
         txtTitle.setText(movies[position]);
 
-        try {
-            GetPoster poster = new GetPoster();
-            posterImg[position] = poster.execute(position).get();
+        if(posters.length > 0){
+            try {
+                GetPoster poster = new GetPoster();
+                posterImg[position] = poster.execute(position).get();
+                imageView.setImageBitmap(posterImg[position]);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        } else {
             imageView.setImageBitmap(posterImg[position]);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
         }
         return rowView;
     }

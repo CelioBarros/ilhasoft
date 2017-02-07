@@ -3,6 +3,8 @@ package filmes.ilhasoft.omdb;
 import android.app.Activity;
 import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.test.espresso.core.deps.guava.reflect.TypeToken;
@@ -41,20 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         EditText editText = (EditText) findViewById(R.id.edit_text_movie);
         final DatabaseController crud = new DatabaseController(getBaseContext());
-        List<Movie> myMovies = crud.getFavoriteMovies();
-        String[] myMoviesTitles = new String[myMovies.size()];
-        //byte[][] myPosters = new byte[][myMovies.size()];
-        for (int i = 0; i < myMovies.size(); i++) {
-            myMoviesTitles[i] = myMovies.get(i).getTitle();
-            //myPosters[i] = myMovies.get(i).getPoster();
-
-        }
-/*
-        CustomList adapterMyMovies = new
-                CustomList(MainActivity.this, myMoviesTitles, myPosters);
-        ListView lvMyMovies = (ListView)findViewById(R.id.list_my_movies);
-        lvMyMovies.setAdapter(adapterMyMovies);
-*/
+        setListFavoriteMovies(crud);
 
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -93,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
                                                 Integer.parseInt(mapMovie.get("Year")), mapMovie.get("Runtime"), mapMovie.get("Genre"),
                                                 mapMovie.get("Plot"), mapMovie.get("Awards"), Float.parseFloat(mapMovie.get("imdbRating")),
                                                 mapMovie.get("imdbVotes"), adapter.getPosterImg(position));
+
+                                        setListFavoriteMovies(crud);
 
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
@@ -133,4 +124,22 @@ public class MainActivity extends AppCompatActivity {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
+    public void setListFavoriteMovies(DatabaseController crud){
+        List<Movie> myMovies = crud.getFavoriteMovies();
+        String[] myMoviesTitles = new String[myMovies.size()];
+        Bitmap[] myPosters = new Bitmap[myMovies.size()];
+        Bitmap bmp;
+        for (int i = 0; i < myMovies.size(); i++) {
+            myMoviesTitles[i] = myMovies.get(i).getTitle();
+            byte[] moviesPosterByte = myMovies.get(i).getPoster();
+            bmp = BitmapFactory.decodeByteArray(moviesPosterByte, 0, moviesPosterByte.length);
+            myPosters[i] = bmp;
+
+        }
+        CustomList adapterMyMovies = new
+                CustomList(MainActivity.this, myMoviesTitles, myPosters);
+        ListView lvMyMovies = (ListView)findViewById(R.id.list_my_movies);
+        lvMyMovies.setAdapter(adapterMyMovies);
+
+    }
 }
