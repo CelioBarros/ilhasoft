@@ -45,7 +45,7 @@ public class SearchMovie extends AsyncTask<String, String, String> {
             Handler handler =  new Handler(context.getMainLooper());
             handler.post( new Runnable(){
                 public void run(){
-                    Toast.makeText(context, "Don't exist this film!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Don't exist this movie!", Toast.LENGTH_LONG).show();
                 }
             });
             e.printStackTrace();

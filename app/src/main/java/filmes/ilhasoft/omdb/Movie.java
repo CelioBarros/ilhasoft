@@ -1,5 +1,8 @@
 package filmes.ilhasoft.omdb;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import java.sql.Blob;
 
 /**
@@ -34,6 +37,10 @@ public class Movie {
 
     public byte[] getPoster() {
         return poster;
+    }
+
+    public Bitmap getPosterBmp() {
+        return BitmapFactory.decodeByteArray(poster, 0, poster.length);
     }
 
     public String getId() {

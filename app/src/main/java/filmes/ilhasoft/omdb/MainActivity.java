@@ -14,12 +14,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         final DatabaseController crud = new DatabaseController(getBaseContext());
         final ListView lvMyMovies = (ListView)findViewById(R.id.list_my_movies);
 
+
         setListFavoriteMovies(lvMyMovies, crud);
 
         lvMyMovies.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -54,60 +59,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 List<Movie> myMovies = crud.getFavoriteMovies();
-                Log.d("teste", myMovies.get(position).getTitle());
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-
-                // set title
-                alertDialogBuilder.setTitle("Your Title");
-
-                // set dialog message
-                alertDialogBuilder
-                        .setMessage("Click yes to exit!")
-                        .setCancelable(false)
-                        .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
-                                // if this button is clicked, close
-                                // current activity
-                                MainActivity.this.finish();
-                            }
-                        })
-                        .setNegativeButton("No",new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
-                                // if this button is clicked, just close
-                                // the dialog box and do nothing
-                                dialog.cancel();
-                            }
-                        });
-
-                // create alert dialog
-                AlertDialog alertDialog = alertDialogBuilder.create();
-
-                // show it
-                alertDialog.show();
-/*
-                MovieInformation movieInformation = new MovieInformation(MainActivity.this);
-                String result = "";
-                try {
-                    String movie = movieInformation.execute("http://www.omdbapi.com/?i="+idMovies[position]).get();
-                    Map<String, String> mapMovie = new Gson().fromJson(movie, new TypeToken<HashMap<String, String>>() {}.getType());
-                    result = crud.insert(mapMovie.get("imdbID"), mapMovie.get("Title"),
-                            Integer.parseInt(mapMovie.get("Year")), mapMovie.get("Runtime"), mapMovie.get("Genre"),
-                            mapMovie.get("Plot"), mapMovie.get("Awards"), Float.parseFloat(mapMovie.get("imdbRating")),
-                            mapMovie.get("imdbVotes"), adapter.getPosterImg(position));
-
-                    setListFavoriteMovies(lvMyMovies, crud);
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (SQLiteConstraintException e){
-                    e.printStackTrace();
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-                Toast.makeText(MainActivity.this,result, Toast.LENGTH_LONG).show();
-*/
+                Movie myMovie = myMovies.get(position);
+                createDialog(myMovie);
             }
         });
 
@@ -183,6 +136,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void createDialog(Movie myMovie) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogLayout = inflater.inflate(R.layout.go_pro_dialog_layout, null);
+        dialog.setTitle(myMovie.getTitle());
+
+        dialog.setView(dialogLayout);
+
+        dialog.show();
+    }
+
     public boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -197,9 +168,7 @@ public class MainActivity extends AppCompatActivity {
         Bitmap bmp;
         for (int i = 0; i < myMovies.size(); i++) {
             myMoviesTitles[i] = myMovies.get(i).getTitle();
-            byte[] moviesPosterByte = myMovies.get(i).getPoster();
-            bmp = BitmapFactory.decodeByteArray(moviesPosterByte, 0, moviesPosterByte.length);
-            myPosters[i] = bmp;
+            myPosters[i] = myMovies.get(i).getPosterBmp();
 
         }
         CustomList adapterMyMovies = new
