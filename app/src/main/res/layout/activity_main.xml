@@ -17,7 +17,8 @@
         android:inputType="text"
         android:hint="Register the Movie"
         android:ems="12"
-        android:id="@+id/edit_text_movie" />
+        android:id="@+id/edit_text_movie"
+        android:textColor="@color/colorPrimaryDark"/>
 
     <ListView
         android:id="@+id/list_search_movies"
@@ -34,7 +35,8 @@
         android:layout_below="@+id/list_search_movies"
         android:layout_alignParentStart="true"
         android:id="@+id/text_favorite"
-        android:textSize="20dp"/>
+        android:textSize="20dp"
+        android:textColor="@color/colorPrimaryDark"/>
     <ListView
         android:id="@+id/list_my_movies"
         android:layout_width="match_parent"

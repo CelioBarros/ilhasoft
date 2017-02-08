@@ -17,5 +17,5 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:paddingTop="5dp"
-        android:textColor="@android:color/darker_gray"/>
+        android:textColor="@color/colorPrimaryDark"/>
 </LinearLayout>
