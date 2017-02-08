@@ -1,7 +1,9 @@
 package filmes.ilhasoft.omdb;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteConstraintException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -46,6 +48,68 @@ public class MainActivity extends AppCompatActivity {
         final ListView lvMyMovies = (ListView)findViewById(R.id.list_my_movies);
 
         setListFavoriteMovies(lvMyMovies, crud);
+
+        lvMyMovies.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                List<Movie> myMovies = crud.getFavoriteMovies();
+                Log.d("teste", myMovies.get(position).getTitle());
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+
+                // set title
+                alertDialogBuilder.setTitle("Your Title");
+
+                // set dialog message
+                alertDialogBuilder
+                        .setMessage("Click yes to exit!")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                // if this button is clicked, close
+                                // current activity
+                                MainActivity.this.finish();
+                            }
+                        })
+                        .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                // if this button is clicked, just close
+                                // the dialog box and do nothing
+                                dialog.cancel();
+                            }
+                        });
+
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                // show it
+                alertDialog.show();
+/*
+                MovieInformation movieInformation = new MovieInformation(MainActivity.this);
+                String result = "";
+                try {
+                    String movie = movieInformation.execute("http://www.omdbapi.com/?i="+idMovies[position]).get();
+                    Map<String, String> mapMovie = new Gson().fromJson(movie, new TypeToken<HashMap<String, String>>() {}.getType());
+                    result = crud.insert(mapMovie.get("imdbID"), mapMovie.get("Title"),
+                            Integer.parseInt(mapMovie.get("Year")), mapMovie.get("Runtime"), mapMovie.get("Genre"),
+                            mapMovie.get("Plot"), mapMovie.get("Awards"), Float.parseFloat(mapMovie.get("imdbRating")),
+                            mapMovie.get("imdbVotes"), adapter.getPosterImg(position));
+
+                    setListFavoriteMovies(lvMyMovies, crud);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (SQLiteConstraintException e){
+                    e.printStackTrace();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                Toast.makeText(MainActivity.this,result, Toast.LENGTH_LONG).show();
+*/
+            }
+        });
 
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
