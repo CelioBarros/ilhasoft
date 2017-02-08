@@ -11,23 +11,50 @@
         android:src="@drawable/movie"
         android:layout_marginTop="15dp"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="15dp" />
+        android:layout_marginStart="10dp" />
 
     <TextView
-        android:text="TextView"
+        android:text="Plot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/plot"
         android:layout_alignTop="@+id/my_movie_poster_dialog"
-        android:layout_alignRight="@+id/my_movie_poster_dialog"
-        android:layout_marginLeft="15dp"
-        android:id="@+id/plot" />
+        android:layout_toEndOf="@+id/my_movie_poster_dialog" />
 
     <TextView
         android:text="Resume"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/my_movie_poster_dialog"
+        android:layout_alignStart="@+id/my_movie_poster_dialog"
         android:id="@+id/resume"
-        android:layout_alignParentStart="true" />
+        android:layout_marginStart="15dp"/>
+
+    <RatingBar
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_below="@+id/resume"
+        android:layout_alignStart="@+id/resume"
+        android:numStars="5"
+        android:stepSize="0.1"
+        android:isIndicator="true" />
+
+    <TextView
+        android:text="Votes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rating"
+        android:layout_alignStart="@+id/rating"
+        android:id="@+id/votes" />
+
+    <TextView
+        android:text="Awards"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/votes"
+        android:layout_alignStart="@+id/votes"
+        android:id="@+id/awards" />
 
 </RelativeLayout>

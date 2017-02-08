@@ -6,7 +6,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -66,6 +65,12 @@ public class DatabaseController {
         }
         dbGet.close();
         return listMovies;
+    }
+
+    public void removeMovie(String id){
+        db = database.getWritableDatabase();
+        db.execSQL("DELETE FROM " + CreateDatabase.TABLE + " WHERE " + CreateDatabase.ID +" = '"+id + "';");
+        db.close();
     }
 
     public static byte[] getBitmapAsByteArray(Bitmap bitmap) {

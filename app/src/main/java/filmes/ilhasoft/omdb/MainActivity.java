@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import android.support.test.espresso.core.deps.guava.reflect.TypeToken;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,9 @@ import android.view.inputmethod.InputMethodManager;
 
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,9 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                List<Movie> myMovies = crud.getFavoriteMovies();
-                Movie myMovie = myMovies.get(position);
-                createDialog(myMovie);
+                createDialog(crud, position, lvMyMovies);
             }
         });
 
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                                     } catch (Exception e){
                                         e.printStackTrace();
                                     }
-                                    Toast.makeText(MainActivity.this,result, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MainActivity.this,result, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         } catch (JSONException e) {
@@ -132,11 +133,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void createDialog(Movie myMovie) {
+    private void createDialog(final DatabaseController crud, int position, final ListView lvMyMovies) {
+        List<Movie> myMovies = crud.getFavoriteMovies();
+        final Movie myMovie = myMovies.get(position);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {}
+        });
+        builder.setNeutralButton("Remove", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                crud.removeMovie(myMovie.getId());
+                setListFavoriteMovies(lvMyMovies, crud);
             }
         });
         final AlertDialog dialog = builder.create();
@@ -145,6 +154,17 @@ public class MainActivity extends AppCompatActivity {
         dialog.setTitle(myMovie.getTitle());
         TextView plot = (TextView)dialogLayout.findViewById(R.id.plot);
         plot.setText(myMovie.getPlot());
+        ImageView poster = (ImageView)dialogLayout.findViewById(R.id.my_movie_poster_dialog);
+        poster.setImageBitmap(myMovie.getPosterBmp());
+        TextView resume = (TextView)dialogLayout.findViewById(R.id.resume);
+        resume.setText(myMovie.getYear() + "/" + myMovie.getRuntime() + "/" + myMovie.getGenre());
+        TextView awards = (TextView)dialogLayout.findViewById(R.id.awards);
+        awards.setText(myMovie.getAwards());
+        RatingBar mRatingBar = (RatingBar)dialogLayout.findViewById(R.id.rating);
+        mRatingBar.setRating(myMovie.getRating()/2.0f);
+        TextView votes = (TextView)dialogLayout.findViewById(R.id.votes);
+        votes.setText(myMovie.getVotes());
+
         dialog.setView(dialogLayout);
 
         dialog.show();
