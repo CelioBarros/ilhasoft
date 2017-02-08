@@ -43,7 +43,9 @@ public class MainActivity extends AppCompatActivity {
 
         EditText editText = (EditText) findViewById(R.id.edit_text_movie);
         final DatabaseController crud = new DatabaseController(getBaseContext());
-        setListFavoriteMovies(crud);
+        final ListView lvMyMovies = (ListView)findViewById(R.id.list_my_movies);
+
+        setListFavoriteMovies(lvMyMovies, crud);
 
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                                                 mapMovie.get("Plot"), mapMovie.get("Awards"), Float.parseFloat(mapMovie.get("imdbRating")),
                                                 mapMovie.get("imdbVotes"), adapter.getPosterImg(position));
 
-                                        setListFavoriteMovies(crud);
+                                        setListFavoriteMovies(lvMyMovies, crud);
 
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
@@ -124,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    public void setListFavoriteMovies(DatabaseController crud){
+    public void setListFavoriteMovies(ListView lvMyMovies, DatabaseController crud){
         List<Movie> myMovies = crud.getFavoriteMovies();
         String[] myMoviesTitles = new String[myMovies.size()];
         Bitmap[] myPosters = new Bitmap[myMovies.size()];
@@ -138,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
         }
         CustomList adapterMyMovies = new
                 CustomList(MainActivity.this, myMoviesTitles, myPosters);
-        ListView lvMyMovies = (ListView)findViewById(R.id.list_my_movies);
         lvMyMovies.setAdapter(adapterMyMovies);
 
     }
