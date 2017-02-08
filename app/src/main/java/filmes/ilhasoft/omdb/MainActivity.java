@@ -6,24 +6,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteConstraintException;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.test.espresso.core.deps.guava.reflect.TypeToken;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -146,9 +141,10 @@ public class MainActivity extends AppCompatActivity {
         });
         final AlertDialog dialog = builder.create();
         LayoutInflater inflater = getLayoutInflater();
-        View dialogLayout = inflater.inflate(R.layout.go_pro_dialog_layout, null);
+        View dialogLayout = inflater.inflate(R.layout.dialog_layout, null);
         dialog.setTitle(myMovie.getTitle());
-
+        TextView plot = (TextView)dialogLayout.findViewById(R.id.plot);
+        plot.setText(myMovie.getPlot());
         dialog.setView(dialogLayout);
 
         dialog.show();
@@ -165,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
         List<Movie> myMovies = crud.getFavoriteMovies();
         String[] myMoviesTitles = new String[myMovies.size()];
         Bitmap[] myPosters = new Bitmap[myMovies.size()];
-        Bitmap bmp;
         for (int i = 0; i < myMovies.size(); i++) {
             myMoviesTitles[i] = myMovies.get(i).getTitle();
             myPosters[i] = myMovies.get(i).getPosterBmp();
